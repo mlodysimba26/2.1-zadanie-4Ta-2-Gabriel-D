@@ -1,0 +1,12 @@
+# Mój pierwszy agent — karta obserwacji
+
+- Narzędzie i model: Antigravity, Gemini 3.8 Flash
+- Moje zadanie (2–3 zdania): Stworzenie aplikacji okienkowej na Windowsa do generowania haseł. Program miał umożliwiać wybór długości hasła oraz decydowanie o obecności znaków specjalnych, cyfr i wielkich liter.
+- Pierwsza wiadomość (wklejona co do znaku): zrob mi aplikacje która będzie działała w oknie, niech to będzie generator chaseł z możliwościa wyboru ilości znaków, i możliwościa wyboru czy mają być znaki specjalne lub liczby, wielkie litery
+- Co agent zrobił najpierw: Sprawdził pliki w folderze oraz przetestował w konsoli, jakie środowiska są zainstalowane na komputerze (Python, Node.js, .NET). Gdy wykrył .NET 9, wybrał technologię WPF i przygotował plan działania.
+- O co pytał — i co zostało zatwierdzone bez czytania: Wyświetlił plan projektu z opisem technologii C# / WPF i poprosił o zatwierdzenie – kliknięto przycisk akceptacji ("Proceed") bez wczytywania się w szczegóły techniczne.
+- Pierwszy błąd i co agent z nim zrobił: Przy zapisywaniu pliku App.xaml agent użył złego polecenia wewnętrznego. Sam od razu wyłapał błąd i w kolejnym kroku poprawnie zmodyfikował plik.
+- Stan po 25 minutach: działa
+- Skąd wiem, że aplikacja działa (co zostało sprawdzone): Kod pomyślnie się zbudował bez błędów , powstał gotowy plik .exe i skrypt Uruchom-Aplikacje.bat. Po kliknięciu otworzyło się okno z suwakiem, opcjami i generatorem haseł.
+- Rzeczy, które agent zrobił, a których nie rozumiem: Generalnie to chyba prawie wszystko ale to jest jakby okej
+- Jak mi się wydawało, że poszło (jedno zdanie): Świetnie, wyśmienicie nawet
