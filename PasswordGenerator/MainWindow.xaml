@@ -5,13 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PasswordGenerator"
         mc:Ignorable="d"
-        Title="Generator Haseł" 
-        Height="680" Width="490"
+        Title="Generator &amp; Audytor Haseł Pro" 
+        Height="740" Width="540"
+        MinWidth="490" MinHeight="660"
         WindowStartupLocation="CenterScreen"
         Background="#0F172A"
         Foreground="#F8FAFC"
         FontFamily="Segoe UI, Segoe UI Variable, sans-serif"
-        ResizeMode="CanMinimize">
+        ResizeMode="CanResizeWithGrip">
 
     <Window.Resources>
         <!-- Styl dla przycisków głównych -->
@@ -56,7 +57,7 @@
             <Setter Property="FontSize" Value="13"/>
             <Setter Property="FontWeight" Value="Medium"/>
             <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Padding" Value="12,8"/>
+            <Setter Property="Padding" Value="10,6"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
@@ -79,207 +80,593 @@
             </Setter>
         </Style>
 
+        <!-- Styl dla przycisków nawigacji zakładek -->
+        <Style x:Key="NavTabButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#94A3B8"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="14,8"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" 
+                                CornerRadius="8" 
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="#F8FAFC"/>
+                                <Setter TargetName="border" Property="Background" Value="#2A374A"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Styl dla przycisków wyboru trybu (Pill) -->
+        <Style x:Key="ModePillStyle" TargetType="Button">
+            <Setter Property="Background" Value="#1E293B"/>
+            <Setter Property="Foreground" Value="#94A3B8"/>
+            <Setter Property="FontSize" Value="12.5"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#334155"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6" 
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="border" Property="BorderBrush" Value="#6366F1"/>
+                                <Setter Property="Foreground" Value="#F8FAFC"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <!-- Styl dla CheckBox -->
         <Style x:Key="ModernCheckBoxStyle" TargetType="CheckBox">
             <Setter Property="Foreground" Value="#E2E8F0"/>
-            <Setter Property="FontSize" Value="13.5"/>
+            <Setter Property="FontSize" Value="13"/>
             <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Margin" Value="0,6"/>
+            <Setter Property="Margin" Value="0,5"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
         </Style>
     </Window.Resources>
 
-    <Grid Margin="22,18,22,20">
+    <Grid Margin="20,16,20,16">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/> <!-- Nagłówek -->
-            <RowDefinition Height="Auto"/> <!-- Karta z hasłem -->
-            <RowDefinition Height="*"/>    <!-- Karta z opcjami -->
-            <RowDefinition Height="Auto"/> <!-- Przycisk Generuj -->
+            <RowDefinition Height="Auto"/> <!-- Nagłówek i Zakładki -->
+            <RowDefinition Height="*"/>    <!-- Główna zawartość wybranej zakładki -->
             <RowDefinition Height="Auto"/> <!-- Stopka -->
         </Grid.RowDefinitions>
 
-        <!-- 1. NAGŁÓWEK -->
-        <StackPanel Grid.Row="0" Margin="0,0,0,16" Orientation="Horizontal" VerticalAlignment="Center">
-            <Border Width="42" Height="42" CornerRadius="10" Background="#6366F1" Margin="0,0,12,0">
-                <TextBlock Text="🔐" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <!-- 1. NAGŁÓWEK I PRZEŁĄCZNIK ZAKŁADEK -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,14">
+            <Grid Margin="0,0,0,12">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0" Width="40" Height="40" CornerRadius="10" Background="#6366F1" Margin="0,0,12,0">
+                    <TextBlock Text="🛡️" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <TextBlock Text="Generator &amp; Audytor Haseł" FontSize="18" FontWeight="Bold" Foreground="#F8FAFC"/>
+                    <TextBlock Text="Kryptograficzne generowanie i analiza bezpieczeństwa haseł" FontSize="11.5" Foreground="#94A3B8"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Pasek nawigacyjny (Tabs) -->
+            <Border Background="#1E293B" CornerRadius="10" Padding="3" BorderBrush="#334155" BorderThickness="1">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button x:Name="btnTabGenerator" Grid.Column="0" Content="⚡ Generator" 
+                            Style="{StaticResource NavTabButtonStyle}" 
+                            Background="#6366F1" Foreground="White"
+                            Click="TabButton_Click" Tag="Generator"/>
+
+                    <Button x:Name="btnTabTester" Grid.Column="1" Content="🔍 Audytor Hasła" 
+                            Style="{StaticResource NavTabButtonStyle}" 
+                            Click="TabButton_Click" Tag="Tester"/>
+
+                    <Button x:Name="btnTabHistory" Grid.Column="2" Content="📜 Historia (0)" 
+                            Style="{StaticResource NavTabButtonStyle}" 
+                            Click="TabButton_Click" Tag="History"/>
+                </Grid>
             </Border>
-            <StackPanel VerticalAlignment="Center">
-                <TextBlock Text="Generator Haseł" FontSize="20" FontWeight="Bold" Foreground="#F8FAFC"/>
-                <TextBlock Text="Generuj bezpieczne i trudne do złamania hasła" FontSize="12" Foreground="#94A3B8"/>
-            </StackPanel>
         </StackPanel>
 
-        <!-- 2. KARTA Z WYGENEROWANYM HASŁEM -->
-        <Border Grid.Row="1" Background="#1E293B" CornerRadius="12" BorderBrush="#334155" BorderThickness="1" Padding="14" Margin="0,0,0,14">
-            <StackPanel>
-                <!-- Pole hasła -->
-                <Grid Margin="0,0,0,10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
+        <!-- 2. GŁÓWNA ZAWARTOŚĆ -->
+        <Grid Grid.Row="1">
 
-                    <TextBox x:Name="txtPassword" 
-                             Grid.Column="0"
-                             Text="Kliknij Generuj" 
-                             IsReadOnly="True" 
-                             Background="#0B1120" 
-                             Foreground="#38BDF8" 
-                             FontFamily="Consolas, Cascadia Code, Courier New" 
-                             FontSize="16" 
-                             FontWeight="Bold" 
-                             Padding="12,10" 
-                             BorderBrush="#334155" 
-                             BorderThickness="1" 
-                             VerticalAlignment="Center"
-                             TextWrapping="Wrap"
-                             MaxHeight="80"
-                             VerticalScrollBarVisibility="Auto"/>
+            <!-- ZAKŁADKA 1: GENERATOR HASEŁ -->
+            <Grid x:Name="panelGenerator" Visibility="Visible">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/> <!-- Karta z hasłem i siłą -->
+                    <RowDefinition Height="Auto"/> <!-- Tryby generowania (Pills) -->
+                    <RowDefinition Height="*"/>    <!-- Parametry wybranego trybu -->
+                    <RowDefinition Height="Auto"/> <!-- Przycisk Generuj -->
+                </Grid.RowDefinitions>
 
-                    <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="8,0,0,0" VerticalAlignment="Center">
-                        <Button x:Name="btnCopy" Content="📋 Kopiuj" 
-                                Style="{StaticResource SecondaryButtonStyle}" 
-                                Click="BtnCopy_Click" 
-                                Height="40" Padding="12,0" Margin="0,0,6,0"
-                                ToolTip="Kopiuj do schowka"/>
-                        <Button x:Name="btnRefresh" Content="🔄" 
-                                Style="{StaticResource SecondaryButtonStyle}" 
-                                Click="BtnGenerate_Click" 
-                                Height="40" Width="40" Padding="0"
-                                ToolTip="Wygeneruj inne hasło"/>
-                    </StackPanel>
-                </Grid>
+                <!-- KARTA Z WYGENEROWANYM HASŁEM -->
+                <Border Grid.Row="0" Background="#1E293B" CornerRadius="12" BorderBrush="#334155" BorderThickness="1" Padding="14" Margin="0,0,0,12">
+                    <StackPanel>
+                        <!-- Pole hasła z przyciskami -->
+                        <Grid Margin="0,0,0,8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
 
-                <!-- Komunikat o skopiowaniu (toast) -->
-                <TextBlock x:Name="lblCopyStatus" 
-                           Text="✓ Skopiowano do schowka!" 
-                           Foreground="#10B981" 
-                           FontSize="12" 
-                           FontWeight="SemiBold" 
-                           Visibility="Collapsed" 
-                           Margin="0,0,0,6"/>
+                            <TextBox x:Name="txtPassword" 
+                                     Grid.Column="0"
+                                     Text="Generowanie..." 
+                                     IsReadOnly="True" 
+                                     Background="#0B1120" 
+                                     Foreground="#38BDF8" 
+                                     FontFamily="Consolas, Cascadia Code, Courier New" 
+                                     FontSize="16" 
+                                     FontWeight="Bold" 
+                                     Padding="12,10" 
+                                     BorderBrush="#334155" 
+                                     BorderThickness="1" 
+                                     VerticalAlignment="Center"
+                                     TextWrapping="Wrap"
+                                     MaxHeight="70"
+                                     VerticalScrollBarVisibility="Auto"/>
 
-                <!-- Wskaźnik siły hasła -->
-                <Grid Margin="0,2,0,0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="8,0,0,0" VerticalAlignment="Center">
+                                <Button x:Name="btnToggleMask" Content="👁️" 
+                                        Style="{StaticResource SecondaryButtonStyle}" 
+                                        Click="BtnToggleMask_Click" 
+                                        Height="38" Width="38" Padding="0" Margin="0,0,5,0"
+                                        ToolTip="Pokaż / Ukryj znaki hasła"/>
+                                <Button x:Name="btnCopy" Content="📋 Kopiuj" 
+                                        Style="{StaticResource SecondaryButtonStyle}" 
+                                        Click="BtnCopy_Click" 
+                                        Height="38" Padding="10,0" Margin="0,0,5,0"
+                                        ToolTip="Kopiuj do schowka"/>
+                                <Button x:Name="btnRefresh" Content="🔄" 
+                                        Style="{StaticResource SecondaryButtonStyle}" 
+                                        Click="BtnGenerate_Click" 
+                                        Height="38" Width="38" Padding="0"
+                                        ToolTip="Wygeneruj inne hasło"/>
+                            </StackPanel>
+                        </Grid>
 
-                    <TextBlock Grid.Column="0" Text="Siła hasła:" FontSize="12" Foreground="#94A3B8" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                        <!-- Toast o skopiowaniu -->
+                        <TextBlock x:Name="lblCopyStatus" 
+                                   Text="✓ Skopiowano do schowka!" 
+                                   Foreground="#10B981" 
+                                   FontSize="11.5" 
+                                   FontWeight="SemiBold" 
+                                   Visibility="Collapsed" 
+                                   Margin="0,0,0,6"/>
 
-                    <ProgressBar x:Name="pbStrength" 
-                                 Grid.Column="1" 
-                                 Height="8" 
-                                 Minimum="0" 
-                                 Maximum="100" 
-                                 Value="0" 
-                                 Foreground="#10B981" 
-                                 Background="#0B1120" 
-                                 BorderThickness="0"
-                                 VerticalAlignment="Center"/>
+                        <!-- Wskaźnik siły hasła -->
+                        <Grid Margin="0,2,0,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
 
-                    <TextBlock x:Name="lblStrength" 
-                               Grid.Column="2" 
-                               Text="—" 
-                               FontSize="12" 
-                               FontWeight="Bold" 
-                               Foreground="#10B981" 
-                               VerticalAlignment="Center" 
-                               Margin="8,0,0,0"/>
-                </Grid>
-            </StackPanel>
-        </Border>
+                            <TextBlock Grid.Column="0" Text="Siła hasła:" FontSize="11.5" Foreground="#94A3B8" VerticalAlignment="Center" Margin="0,0,8,0"/>
 
-        <!-- 3. KARTA Z OPCJAMI -->
-        <Border Grid.Row="2" Background="#1E293B" CornerRadius="12" BorderBrush="#334155" BorderThickness="1" Padding="14" Margin="0,0,0,14">
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
-                <StackPanel>
-                    <!-- Wybór długości -->
-                    <Grid Margin="0,0,0,6">
-                        <TextBlock Text="Długość hasła" FontSize="13.5" FontWeight="SemiBold" Foreground="#F8FAFC" VerticalAlignment="Center"/>
-                        <Border HorizontalAlignment="Right" Background="#334155" CornerRadius="6" Padding="8,3">
-                            <TextBlock x:Name="lblLength" 
-                                       Text="{Binding ElementName=sliderLength, Path=Value, StringFormat={}{0:0} znaków}" 
-                                       Foreground="#38BDF8" 
+                            <ProgressBar x:Name="pbStrength" 
+                                         Grid.Column="1" 
+                                         Height="7" 
+                                         Minimum="0" 
+                                         Maximum="100" 
+                                         Value="0" 
+                                         Foreground="#10B981" 
+                                         Background="#0B1120" 
+                                         BorderThickness="0"
+                                         VerticalAlignment="Center"/>
+
+                            <TextBlock x:Name="lblStrength" 
+                                       Grid.Column="2" 
+                                       Text="—" 
+                                       FontSize="11.5" 
                                        FontWeight="Bold" 
-                                       FontSize="13"/>
+                                       Foreground="#10B981" 
+                                       VerticalAlignment="Center" 
+                                       Margin="8,0,0,0"/>
+                        </Grid>
+
+                        <!-- Szacowany czas na złamanie -->
+                        <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
+                            <TextBlock Text="⏱️ Czas na złamanie:" FontSize="11" Foreground="#64748B" Margin="0,0,6,0"/>
+                            <TextBlock x:Name="lblCrackTime" Text="—" FontSize="11" FontWeight="SemiBold" Foreground="#38BDF8"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <!-- WYBÓR TRYBU GENERATORA (Znaki / Wyrażenie / PIN) -->
+                <Grid Grid.Row="1" Margin="0,0,0,10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button x:Name="btnModeChars" Grid.Column="0" Content="🔠 Losowe znaki" 
+                            Style="{StaticResource ModePillStyle}" 
+                            Background="#6366F1" Foreground="White" BorderBrush="#6366F1"
+                            Click="ModeButton_Click" Tag="Chars" Margin="0,0,4,0"/>
+
+                    <Button x:Name="btnModeWords" Grid.Column="1" Content="📖 Ze słów (Passphrase)" 
+                            Style="{StaticResource ModePillStyle}" 
+                            Click="ModeButton_Click" Tag="Words" Margin="2,0,2,0"/>
+
+                    <Button x:Name="btnModePin" Grid.Column="2" Content="🔢 Kod PIN" 
+                            Style="{StaticResource ModePillStyle}" 
+                            Click="ModeButton_Click" Tag="Pin" Margin="4,0,0,0"/>
+                </Grid>
+
+                <!-- KARTA OPCJI (Dostosowywana pod wybrany tryb) -->
+                <Border Grid.Row="2" Background="#1E293B" CornerRadius="12" BorderBrush="#334155" BorderThickness="1" Padding="14" Margin="0,0,0,12">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                        <StackPanel>
+                            <!-- OPCJE: TRYB ZNAKI -->
+                            <StackPanel x:Name="panelCharsOptions" Visibility="Visible">
+                                <Grid Margin="0,0,0,4">
+                                    <TextBlock Text="Długość hasła" FontSize="13" FontWeight="SemiBold" Foreground="#F8FAFC" VerticalAlignment="Center"/>
+                                    <Border HorizontalAlignment="Right" Background="#334155" CornerRadius="6" Padding="8,2">
+                                        <TextBlock x:Name="lblCharsLength" 
+                                                   Text="{Binding ElementName=sliderLength, Path=Value, StringFormat={}{0:0} znaków}" 
+                                                   Foreground="#38BDF8" 
+                                                   FontWeight="Bold" 
+                                                   FontSize="12.5"/>
+                                    </Border>
+                                </Grid>
+
+                                <Slider x:Name="sliderLength" 
+                                        Minimum="4" 
+                                        Maximum="64" 
+                                        Value="16" 
+                                        TickFrequency="1" 
+                                        IsSnapToTickEnabled="True" 
+                                        ValueChanged="OptionChanged" 
+                                        Margin="0,4,0,12"
+                                        Foreground="#6366F1"/>
+
+                                <Separator Background="#334155" Margin="0,0,0,10"/>
+
+                                <TextBlock Text="Zestaw znaków" FontSize="12.5" FontWeight="SemiBold" Foreground="#94A3B8" Margin="0,0,0,4"/>
+
+                                <CheckBox x:Name="chkUppercase" 
+                                          Content="Wielkie litery (A, B, C, ...)" 
+                                          IsChecked="True" 
+                                          Style="{StaticResource ModernCheckBoxStyle}" 
+                                          Click="OptionChanged"/>
+
+                                <CheckBox x:Name="chkLowercase" 
+                                          Content="Małe litery (a, b, c, ...)" 
+                                          IsChecked="True" 
+                                          Style="{StaticResource ModernCheckBoxStyle}" 
+                                          Click="OptionChanged"/>
+
+                                <CheckBox x:Name="chkNumbers" 
+                                          Content="Cyfry (0, 1, 2, 3, ...)" 
+                                          IsChecked="True" 
+                                          Style="{StaticResource ModernCheckBoxStyle}" 
+                                          Click="OptionChanged"/>
+
+                                <CheckBox x:Name="chkSpecial" 
+                                          Content="Znaki specjalne (!, @, #, $, %, ...)" 
+                                          IsChecked="True" 
+                                          Style="{StaticResource ModernCheckBoxStyle}" 
+                                          Click="OptionChanged"/>
+
+                                <CheckBox x:Name="chkExcludeAmbiguous" 
+                                          Content="Wyklucz mylące znaki (np. 1, l, I, 0, O)" 
+                                          IsChecked="False" 
+                                          Style="{StaticResource ModernCheckBoxStyle}" 
+                                          Click="OptionChanged"/>
+                            </StackPanel>
+
+                            <!-- OPCJE: TRYB SŁOWA (PASSPHRASE) -->
+                            <StackPanel x:Name="panelWordsOptions" Visibility="Collapsed">
+                                <Grid Margin="0,0,0,4">
+                                    <TextBlock Text="Liczba słów" FontSize="13" FontWeight="SemiBold" Foreground="#F8FAFC" VerticalAlignment="Center"/>
+                                    <Border HorizontalAlignment="Right" Background="#334155" CornerRadius="6" Padding="8,2">
+                                        <TextBlock Text="{Binding ElementName=sliderWordCount, Path=Value, StringFormat={}{0:0} słów}" 
+                                                   Foreground="#38BDF8" 
+                                                   FontWeight="Bold" 
+                                                   FontSize="12.5"/>
+                                    </Border>
+                                </Grid>
+
+                                <Slider x:Name="sliderWordCount" 
+                                        Minimum="3" 
+                                        Maximum="7" 
+                                        Value="4" 
+                                        TickFrequency="1" 
+                                        IsSnapToTickEnabled="True" 
+                                        ValueChanged="OptionChanged" 
+                                        Margin="0,4,0,12"
+                                        Foreground="#6366F1"/>
+
+                                <Separator Background="#334155" Margin="0,0,0,10"/>
+
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Grid.Column="0" Text="Separator słów:" FontSize="13" Foreground="#E2E8F0" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                    <ComboBox x:Name="cmbSeparator" Grid.Column="1" SelectedIndex="0" 
+                                              Background="#0B1120" Foreground="#F8FAFC" 
+                                              SelectionChanged="OptionChanged" Padding="8,4">
+                                        <ComboBoxItem Content="Myślnik (-)" Tag="-"/>
+                                        <ComboBoxItem Content="Podkreślnik (_)" Tag="_"/>
+                                        <ComboBoxItem Content="Kropka (.)" Tag="."/>
+                                        <ComboBoxItem Content="Spacja ( )" Tag=" "/>
+                                        <ComboBoxItem Content="Brak separatora" Tag=""/>
+                                    </ComboBox>
+                                </Grid>
+
+                                <CheckBox x:Name="chkCapitalizeWords" 
+                                          Content="Wielka litera na początku każdego słowa (CamelCase)" 
+                                          IsChecked="True" 
+                                          Style="{StaticResource ModernCheckBoxStyle}" 
+                                          Click="OptionChanged"/>
+
+                                <CheckBox x:Name="chkAddNumberToPassphrase" 
+                                          Content="Dołącz losową liczbę na końcu (np. -83)" 
+                                          IsChecked="True" 
+                                          Style="{StaticResource ModernCheckBoxStyle}" 
+                                          Click="OptionChanged"/>
+                            </StackPanel>
+
+                            <!-- OPCJE: TRYB PIN -->
+                            <StackPanel x:Name="panelPinOptions" Visibility="Collapsed">
+                                <Grid Margin="0,0,0,4">
+                                    <TextBlock Text="Długość kodu PIN" FontSize="13" FontWeight="SemiBold" Foreground="#F8FAFC" VerticalAlignment="Center"/>
+                                    <Border HorizontalAlignment="Right" Background="#334155" CornerRadius="6" Padding="8,2">
+                                        <TextBlock Text="{Binding ElementName=sliderPinLength, Path=Value, StringFormat={}{0:0} cyfr}" 
+                                                   Foreground="#38BDF8" 
+                                                   FontWeight="Bold" 
+                                                   FontSize="12.5"/>
+                                    </Border>
+                                </Grid>
+
+                                <Slider x:Name="sliderPinLength" 
+                                        Minimum="4" 
+                                        Maximum="12" 
+                                        Value="6" 
+                                        TickFrequency="1" 
+                                        IsSnapToTickEnabled="True" 
+                                        ValueChanged="OptionChanged" 
+                                        Margin="0,4,0,12"
+                                        Foreground="#6366F1"/>
+
+                                <Separator Background="#334155" Margin="0,0,0,10"/>
+
+                                <CheckBox x:Name="chkAvoidRepeatsPin" 
+                                          Content="Unikaj powtarzających się cyfr obok siebie (np. brak 77)" 
+                                          IsChecked="True" 
+                                          Style="{StaticResource ModernCheckBoxStyle}" 
+                                          Click="OptionChanged"/>
+                            </StackPanel>
+
+                            <!-- Ostrzeżenie jeśli brak wybranych opcji -->
+                            <TextBlock x:Name="lblWarning" 
+                                       Text="⚠️ Wybierz co najmniej jeden zestaw znaków!" 
+                                       Foreground="#EF4444" 
+                                       FontSize="12" 
+                                       FontWeight="SemiBold" 
+                                       Visibility="Collapsed" 
+                                       Margin="0,8,0,0"/>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Border>
+
+                <!-- PRZYCISK GENEROWANIA -->
+                <Button Grid.Row="3" 
+                        x:Name="btnGenerate" 
+                        Content="⚡ Generuj Nowe Hasło" 
+                        Style="{StaticResource PrimaryButtonStyle}" 
+                        Height="44" 
+                        FontSize="14.5" 
+                        Click="BtnGenerate_Click"/>
+            </Grid>
+
+            <!-- ZAKŁADKA 2: AUDYTOR / TESTER WŁASNEGO HASŁA -->
+            <Grid x:Name="panelTester" Visibility="Collapsed">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel>
+                        <!-- KARTA WPROWADZANIA HASŁA DO TESTU -->
+                        <Border Background="#1E293B" CornerRadius="12" BorderBrush="#334155" BorderThickness="1" Padding="14" Margin="0,0,0,14">
+                            <StackPanel>
+                                <TextBlock Text="Wprowadź hasło do przetestowania:" FontSize="13" FontWeight="SemiBold" Foreground="#F8FAFC" Margin="0,0,0,8"/>
+                                
+                                <Grid Margin="0,0,0,10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBox x:Name="txtTestPassword" 
+                                             Grid.Column="0"
+                                             Background="#0B1120" 
+                                             Foreground="#38BDF8" 
+                                             FontFamily="Consolas, Cascadia Code, Courier New" 
+                                             FontSize="15" 
+                                             Padding="10,8" 
+                                             BorderBrush="#334155" 
+                                             BorderThickness="1" 
+                                             TextChanged="TxtTestPassword_TextChanged"/>
+
+                                    <Button x:Name="btnPasteToTester" Grid.Column="1" 
+                                            Content="📋 Wklej" 
+                                            Style="{StaticResource SecondaryButtonStyle}" 
+                                            Height="38" Padding="12,0" Margin="8,0,0,0"
+                                            Click="BtnPasteToTester_Click"
+                                            ToolTip="Wklej ze schowka"/>
+                                </Grid>
+
+                                <!-- Pasek siły testowanego hasła -->
+                                <Grid Margin="0,2,0,6">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0" Text="Ocena siły:" FontSize="12" Foreground="#94A3B8" VerticalAlignment="Center" Margin="0,0,8,0"/>
+
+                                    <ProgressBar x:Name="pbTestStrength" 
+                                                 Grid.Column="1" 
+                                                 Height="8" 
+                                                 Minimum="0" 
+                                                 Maximum="100" 
+                                                 Value="0" 
+                                                 Foreground="#10B981" 
+                                                 Background="#0B1120" 
+                                                 BorderThickness="0"
+                                                 VerticalAlignment="Center"/>
+
+                                    <TextBlock x:Name="lblTestStrength" 
+                                               Grid.Column="2" 
+                                               Text="Wpisz hasło" 
+                                               FontSize="12" 
+                                               FontWeight="Bold" 
+                                               Foreground="#94A3B8" 
+                                               VerticalAlignment="Center" 
+                                               Margin="8,0,0,0"/>
+                                </Grid>
+
+                                <!-- Szacowany czas na złamanie testowanego hasła -->
+                                <Border Background="#0F172A" CornerRadius="8" Padding="10" Margin="0,4,0,0">
+                                    <StackPanel>
+                                        <TextBlock Text="Szacowany czas złamania (atak brute-force 100 mld prób/s):" FontSize="11" Foreground="#94A3B8" Margin="0,0,0,4"/>
+                                        <TextBlock x:Name="lblTestCrackTime" Text="Brak danych" FontSize="14" FontWeight="Bold" Foreground="#38BDF8"/>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
                         </Border>
+
+                        <!-- KARTA CHECKLISTY BEZPIECZEŃSTWA -->
+                        <Border Background="#1E293B" CornerRadius="12" BorderBrush="#334155" BorderThickness="1" Padding="14">
+                            <StackPanel>
+                                <TextBlock Text="Kryteria bezpieczeństwa:" FontSize="13.5" FontWeight="Bold" Foreground="#F8FAFC" Margin="0,0,0,10"/>
+
+                                <TextBlock x:Name="lblCheckLength" Text="⚪ Co najmniej 12 znaków długości" FontSize="12.5" Foreground="#94A3B8" Margin="0,4"/>
+                                <TextBlock x:Name="lblCheckUpper" Text="⚪ Zawiera wielkie litery (A-Z)" FontSize="12.5" Foreground="#94A3B8" Margin="0,4"/>
+                                <TextBlock x:Name="lblCheckLower" Text="⚪ Zawiera małe litery (a-z)" FontSize="12.5" Foreground="#94A3B8" Margin="0,4"/>
+                                <TextBlock x:Name="lblCheckDigits" Text="⚪ Zawiera cyfry (0-9)" FontSize="12.5" Foreground="#94A3B8" Margin="0,4"/>
+                                <TextBlock x:Name="lblCheckSpecial" Text="⚪ Zawiera znaki specjalne (!@#$...)" FontSize="12.5" Foreground="#94A3B8" Margin="0,4"/>
+                                <TextBlock x:Name="lblCheckPatterns" Text="⚪ Brak popularnych słów i powtarzających się schematów" FontSize="12.5" Foreground="#94A3B8" Margin="0,4"/>
+
+                                <Separator Background="#334155" Margin="0,10,0,10"/>
+
+                                <TextBlock Text="💡 Wskazówka eksperta:" FontSize="12" FontWeight="SemiBold" Foreground="#38BDF8" Margin="0,0,0,4"/>
+                                <TextBlock x:Name="lblTestTip" 
+                                           Text="Dobre hasło powinno mieć co najmniej 14-16 znaków lub składać się z 4-5 losowych słów. Unikaj dat urodzin, imion i popularnych zwrotów." 
+                                           FontSize="11.5" Foreground="#94A3B8" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+
+            <!-- ZAKŁADKA 3: HISTORIA WYGENEROWANYCH HASEŁ -->
+            <Grid x:Name="panelHistory" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/> <!-- Akcje historii (Wyczyść) -->
+                    <RowDefinition Height="*"/>    <!-- Lista haseł -->
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0" Margin="0,0,0,10">
+                    <TextBlock Text="Hasła wygenerowane podczas tej sesji:" FontSize="12.5" Foreground="#94A3B8" VerticalAlignment="Center"/>
+                    <Button x:Name="btnClearHistory" Content="🗑️ Wyczyść listę" 
+                            Style="{StaticResource SecondaryButtonStyle}" 
+                            HorizontalAlignment="Right" 
+                            Click="BtnClearHistory_Click" Padding="10,5"/>
+                </Grid>
+
+                <Border Grid.Row="1" Background="#1E293B" CornerRadius="12" BorderBrush="#334155" BorderThickness="1" Padding="10">
+                    <Grid>
+                        <!-- Pusta historia -->
+                        <TextBlock x:Name="lblEmptyHistory" 
+                                   Text="Brak zapisanych haseł. Przejdź do Generatora i utwórz hasło!" 
+                                   Foreground="#64748B" FontSize="13" 
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" 
+                                   Visibility="Visible"/>
+
+                        <!-- Lista elementów historii -->
+                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                            <ItemsControl x:Name="icHistory">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Background="#0F172A" CornerRadius="8" Padding="10,8" Margin="0,0,0,8" BorderBrush="#334155" BorderThickness="1">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <StackPanel Grid.Column="0" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding Password}" 
+                                                               FontFamily="Consolas, Cascadia Code, Courier New" 
+                                                               FontSize="13.5" FontWeight="Bold" 
+                                                               Foreground="#38BDF8" TextWrapping="Wrap"/>
+                                                    <StackPanel Orientation="Horizontal" Margin="0,3,0,0">
+                                                        <TextBlock Text="{Binding Timestamp}" FontSize="11" Foreground="#64748B" Margin="0,0,8,0"/>
+                                                        <Border Background="#1E293B" CornerRadius="4" Padding="5,1" Margin="0,0,6,0">
+                                                            <TextBlock Text="{Binding ModeTag}" FontSize="10" FontWeight="SemiBold" Foreground="#94A3B8"/>
+                                                        </Border>
+                                                        <TextBlock Text="{Binding StrengthTag}" FontSize="11" FontWeight="Bold" Foreground="{Binding StrengthBrush}"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+
+                                                <Button Grid.Column="1" Content="📋 Kopiuj" 
+                                                        Style="{StaticResource SecondaryButtonStyle}" 
+                                                        Click="BtnCopyHistoryItem_Click" 
+                                                        Tag="{Binding Password}" 
+                                                        Height="32" Padding="8,0" VerticalAlignment="Center" Margin="8,0,0,0"/>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
                     </Grid>
+                </Border>
+            </Grid>
 
-                    <Slider x:Name="sliderLength" 
-                            Minimum="4" 
-                            Maximum="64" 
-                            Value="16" 
-                            TickFrequency="1" 
-                            IsSnapToTickEnabled="True" 
-                            ValueChanged="OptionChanged" 
-                            Margin="0,6,0,14"
-                            Foreground="#6366F1"/>
+        </Grid>
 
-                    <Separator Background="#334155" Margin="0,0,0,10"/>
-
-                    <!-- Opcje znaków -->
-                    <TextBlock Text="Zawartość hasła" FontSize="13.5" FontWeight="SemiBold" Foreground="#F8FAFC" Margin="0,0,0,4"/>
-
-                    <CheckBox x:Name="chkUppercase" 
-                              Content="Wielkie litery (A, B, C, ...)" 
-                              IsChecked="True" 
-                              Style="{StaticResource ModernCheckBoxStyle}" 
-                              Click="OptionChanged"/>
-
-                    <CheckBox x:Name="chkLowercase" 
-                              Content="Małe litery (a, b, c, ...)" 
-                              IsChecked="True" 
-                              Style="{StaticResource ModernCheckBoxStyle}" 
-                              Click="OptionChanged"/>
-
-                    <CheckBox x:Name="chkNumbers" 
-                              Content="Cyfry (0, 1, 2, 3, ...)" 
-                              IsChecked="True" 
-                              Style="{StaticResource ModernCheckBoxStyle}" 
-                              Click="OptionChanged"/>
-
-                    <CheckBox x:Name="chkSpecial" 
-                              Content="Znaki specjalne (!, @, #, $, %, ...)" 
-                              IsChecked="True" 
-                              Style="{StaticResource ModernCheckBoxStyle}" 
-                              Click="OptionChanged"/>
-
-                    <CheckBox x:Name="chkExcludeAmbiguous" 
-                              Content="Wyklucz mylące znaki (np. 1, l, I, 0, O)" 
-                              IsChecked="False" 
-                              Style="{StaticResource ModernCheckBoxStyle}" 
-                              Click="OptionChanged"/>
-
-                    <!-- Ostrzeżenie jeśli brak wybranych opcji -->
-                    <TextBlock x:Name="lblWarning" 
-                               Text="⚠️ Wybierz co najmniej jeden zestaw znaków!" 
-                               Foreground="#EF4444" 
-                               FontSize="12" 
-                               FontWeight="SemiBold" 
-                               Visibility="Collapsed" 
-                               Margin="0,8,0,0"/>
-                </StackPanel>
-            </ScrollViewer>
-        </Border>
-
-        <!-- 4. GŁÓWNY PRZYCISK GENEROWANIA -->
-        <Button Grid.Row="3" 
-                x:Name="btnGenerate" 
-                Content="⚡ Generuj Nowe Hasło" 
-                Style="{StaticResource PrimaryButtonStyle}" 
-                Height="44" 
-                FontSize="15" 
-                Click="BtnGenerate_Click"
-                Margin="0,0,0,10"/>
-
-        <!-- 5. STOPKA -->
-        <TextBlock Grid.Row="4" 
-                   Text="Generowanie kryptograficznie bezpieczne (RNG). 100% lokalnie." 
+        <!-- 3. STOPKA -->
+        <TextBlock Grid.Row="2" 
+                   Text="Kryptograficzny generator CSPRNG. Wszystkie obliczenia wykonywane 100% lokalnie." 
                    FontSize="11" 
                    Foreground="#64748B" 
-                   HorizontalAlignment="Center"/>
+                   HorizontalAlignment="Center" 
+                   Margin="0,10,0,0"/>
     </Grid>
 </Window>
